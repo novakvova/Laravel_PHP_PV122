@@ -1,18 +1,21 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { ICategoryItem } from "./types";
 
 const HomePage = () => {
   const [list, setList] = useState<ICategoryItem[]>([]);
 
-  const onAddCategory=() => {
-    const item : ICategoryItem = {
-      id: 4,
-      description: "Козак",
-      name: "Нормальний пацан",
-      image: "https://www.stryi.net.ua/wp-content/uploads/2023/02/kozak-360x480.webp"
-    };
-    setList([item]);
-  }
+  useEffect(() => {
+    axios.get<ICategoryItem[]>("http://127.0.0.1:8000/api/category")
+    .then(resp=> {
+      setList(resp.data);
+    })
+    .catch(bad=> {
+      console.log("Bad request", bad);
+    });
+  }, []);
+  
 
   const dataView = list.map((category) => (
     <tr key={category.id}>
@@ -27,7 +30,7 @@ const HomePage = () => {
   return (
     <>
       <h1 className="text-center">Список категорій</h1>
-      <button className="btn btn-success" onClick={onAddCategory}>Додати</button>
+      <Link className="btn btn-success" to="/categories/create">Додати</Link>
       <table className="table">
         <thead>
           <tr>

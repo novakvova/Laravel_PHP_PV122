@@ -11,7 +11,7 @@ class CategoryController extends Controller
     public function index()
     {
         $list = Category::all();
-        return response()->json($list);
+        return response()->json($list,200);
     }
 
     public function store(Request $request)
