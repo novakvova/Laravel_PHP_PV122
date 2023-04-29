@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./DefaultHeader.css";
 
 const DefaultHeader = () => {
@@ -6,9 +7,9 @@ const DefaultHeader = () => {
       <header data-bs-theme="dark">
         <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
           <div className="container">
-            <a className="navbar-brand" href="#">
-              Carousel
-            </a>
+            <Link className="navbar-brand" to="/">
+              Магазинчик
+            </Link>
             <button
               className="navbar-toggler"
               type="button"
@@ -23,9 +24,9 @@ const DefaultHeader = () => {
             <div className="collapse navbar-collapse" id="navbarCollapse">
               <ul className="navbar-nav me-auto mb-2 mb-md-0">
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="#">
-                    Home
-                  </a>
+                  <Link className="nav-link active" aria-current="page" to="/categories/create">
+                    Додати
+                  </Link>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link" href="#">
