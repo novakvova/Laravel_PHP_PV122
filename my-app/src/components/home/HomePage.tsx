@@ -1,20 +1,32 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ICategoryItem } from "./types";
+import { Link, useSearchParams } from "react-router-dom";
+import { ICategoryItem, ICategoryResponse, ICategorySearch } from "./types";
 
 const HomePage = () => {
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  console.log("page = ", searchParams.get("page"));
+  
+  
+  const [search, setSearch] = useState<ICategorySearch>({
+    page: searchParams.get("page") || 1,
+  });
+
   const [list, setList] = useState<ICategoryItem[]>([]);
 
   useEffect(() => {
-    axios.get<ICategoryItem[]>("http://127.0.0.1:8000/api/category")
-    .then(resp=> {
-      setList(resp.data);
-    })
-    .catch(bad=> {
-      console.log("Bad request", bad);
-    });
-  }, []);
+    axios
+      .get<ICategoryResponse>("http://127.0.0.1:8000/api/category", {
+        params: search,
+      })
+      .then((resp) => {
+        setList(resp.data.data);
+      })
+      .catch((bad) => {
+        console.log("Bad request", bad);
+      });
+  }, [search]);
   
 
   const dataView = list.map((category) => (
@@ -30,19 +42,23 @@ const HomePage = () => {
   return (
     <>
       <h1 className="text-center">Список категорій</h1>
-      <Link className="btn btn-success" to="/categories/create">Додати</Link>
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Фото</th>
-            <th scope="col">Назва</th>
-            <th scope="col">Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dataView}
-        </tbody>
-      </table>
+      <Link className="btn btn-success" to="/categories/create">
+        Додати
+      </Link>
+      {list.length === 0 ? (
+        <h2>Дані відсутні</h2>
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Фото</th>
+              <th scope="col">Назва</th>
+              <th scope="col">Опис</th>
+            </tr>
+          </thead>
+          <tbody>{dataView}</tbody>
+        </table>
+      )}
     </>
   );
 };
