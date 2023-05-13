@@ -1,8 +1,8 @@
-import axios from "axios";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ICategoryItem, ICategoryResponse, ICategorySearch } from "./types";
+import http from "../../http";
+import { ICategoryResponse, ICategorySearch } from "./types";
 
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,8 +20,8 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    axios
-      .get<ICategoryResponse>("http://127.0.0.1:8000/api/category", {
+    http
+      .get<ICategoryResponse>(`api/category`, {
         params: search,
       })
       .then((resp) => {
