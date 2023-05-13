@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { APP_ENV } from "../../env";
 import http from "../../http";
 import { ICategoryResponse, ICategorySearch } from "./types";
 
@@ -54,7 +55,7 @@ const HomePage = () => {
   const dataView = data.map((category) => (
     <tr key={category.id}>
       <th>
-        <img src={category.image} alt="Фотка" width={50} />
+        <img src={`${APP_ENV.BASE_URL}storage/uploads/${category.image}`} alt="Фотка" width={50} />
       </th>
       <td>{category.name}</td>
       <td>{category.description}</td>
