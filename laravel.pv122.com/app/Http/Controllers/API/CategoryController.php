@@ -10,6 +10,11 @@ use Storage;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index']]);
+    }
+
     /**
      * @OA\Get(
      *     tags={"Category"},
