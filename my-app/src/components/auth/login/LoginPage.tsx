@@ -1,13 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { ILogin } from "./types";
+import { ILogin, ILoginResult } from "./types";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import classNames from "classnames";
 import http from "../../../http";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { AuthUserActionType, IUser } from "../types";
+import jwtDecode from "jwt-decode";
 
 const LoginPage = () => {
+
   const navigator = useNavigate();
+  const dispatch = useDispatch();
 
   const initValues: ILogin = {
     email: "",
@@ -26,9 +31,18 @@ const LoginPage = () => {
   const onSubmitFormikData = async (values: ILogin) => {
     try {
         console.log("Formik send data", values);
-        const result = await http.post("api/auth/login", values);
+        const result = await http.post<ILoginResult>("api/auth/login", values);
+        const {access_token} = result.data;
+        //console.log("Login user ", access_token);
+        const user = jwtDecode(access_token) as IUser;
+        //console.log("User = ", user);
+        localStorage.token = access_token;  //зберіг токен в веб браузер
         setMessage("");
-        console.log("Auth is good", result);
+        http.defaults.headers.common['Authorization'] = `Bearer ${localStorage.token}`;
+        dispatch({type: AuthUserActionType.LOGIN_USER, payload: {
+          email: user.email,
+          name: user.name
+        } as IUser });
         navigator("/");
     }
     catch(error) {

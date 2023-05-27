@@ -1,8 +1,10 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { APP_ENV } from "../../env";
 import http from "../../http";
+import { AuthUserActionType } from "../auth/types";
 import { ICategoryResponse, ICategorySearch } from "./types";
 
 const HomePage = () => {
@@ -41,7 +43,7 @@ const HomePage = () => {
   }
 
   const pagination = buttons.map((page) => (
-    <li className={classNames("page-item", {"active": page===current_page})}>
+    <li key={page} className={classNames("page-item", {"active": page===current_page})}>
       <Link
         className="page-link"
         to={"?page=" + page}
@@ -61,10 +63,23 @@ const HomePage = () => {
       <td>{category.description}</td>
     </tr>
   ));
+  const dispatch = useDispatch();
+
+  const loginUser = () => {
+    console.log("Вхід у систему");
+    dispatch({type: AuthUserActionType.LOGIN_USER});
+  }
+
+  const logoutUser = () => {
+    console.log("Вийти із системи");
+    dispatch({type: AuthUserActionType.LOGOUT_USER});
+  }
 
   return (
     <>
       <h1 className="text-center">Список категорій</h1>
+      <button className="btn btn-primary" onClick={loginUser}>Вхід</button>
+      <button className="btn btn-danger" onClick={logoutUser}>Вихід</button>
       <Link className="btn btn-success" to="/categories/create">
         Додати
       </Link>
