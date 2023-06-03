@@ -19,6 +19,7 @@ class CategoryController extends Controller
      * @OA\Get(
      *     tags={"Category"},
      *     path="/api/category",
+     *   security={{ "bearerAuth": {} }},
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
@@ -33,6 +34,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
+
         $list = Category::paginate(2);
         return response()->json($list,200);
     }
@@ -42,6 +44,7 @@ class CategoryController extends Controller
      * @OA\Post(
      *     tags={"Category"},
      *     path="/api/category",
+     *   security={{ "bearerAuth": {} }},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
@@ -66,6 +69,50 @@ class CategoryController extends Controller
      *     @OA\Response(response="200", description="Add Category.")
      * )
      */
+
+    function image_resize($width, $height, $path, $inputName)
+    {
+        list($w,$h)=getimagesize($_FILES[$inputName]['tmp_name']);
+        $maxSize=0;
+        if(($w>$h)and ($width>$height))
+            $maxSize=$width;
+        else
+            $maxSize=$height;
+        $width=$maxSize;
+        $height=$maxSize;
+        $ration_orig=$w/$h;
+        if(1>$ration_orig)
+            $width=ceil($height*$ration_orig);
+        else
+            $height=ceil($width/$ration_orig);
+        //отримуємо файл
+        $imgString=file_get_contents($_FILES[$inputName]['tmp_name']);
+        $image=imagecreatefromstring($imgString);
+        //нове зображення
+        $tmp=imagecreatetruecolor($width,$height);
+        imagecopyresampled($tmp, $image,
+            0,0,
+            0,0,
+            $width, $height,
+            $w, $h);
+        //Зберегти зображення у файлову систему
+        switch($_FILES[$inputName]['type'])
+        {
+            case 'image/jpeg':
+                imagejpeg($tmp,$path,30);
+                break;
+            case 'image/png':
+                imagepng($tmp,$path,0);
+                break;
+            case 'image/gif':
+                imagegif($tmp, $path);
+                break;
+        }
+        return $path;
+        //очисчаємо память
+        imagedestroy($image);
+        imagedestroy($tmp);
+    }
     public function store(Request $request)
     {
         //отримуємо дані із запиту(name, image, description)
@@ -85,7 +132,13 @@ class CategoryController extends Controller
         }
         //php artisan storage:link
         $filename = uniqid(). '.' .$request->file("image")->getClientOriginalExtension();
-        Storage::disk('local')->put("public/uploads/".$filename,file_get_contents($request->file("image")));
+
+        $dir = $_SERVER['DOCUMENT_ROOT'];
+        $fileSave = $dir.'/uploads/'.$filename;
+
+        $this->image_resize(300,300,$fileSave, 'image');
+
+        //Storage::disk('local')->put("public/uploads/".$filename,file_get_contents($request->file("image")));
         $input["image"] = $filename;
         //$file = $request->file('image');
         //$path = Storage::disk('public')->putFile('uploads', $file);
