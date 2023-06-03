@@ -37,3 +37,4 @@ Route::get("/category", [CategoryController::class, 'index']);
 Route::post("/category", [CategoryController::class, 'store']);
 
 Route::delete('/category/{id}',  [CategoryController:: class, 'delete']);
+Route::post('/category/edit/{id}',  [CategoryController:: class, 'edit']);
