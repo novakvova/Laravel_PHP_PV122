@@ -39,37 +39,6 @@ class CategoryController extends Controller
         return response()->json($list,200);
     }
 
-
-    /**
-     * @OA\Post(
-     *     tags={"Category"},
-     *     path="/api/category",
-     *   security={{ "bearerAuth": {} }},
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"name"},
-     *                 @OA\Property(
-     *                     property="image",
-     *                     type="string",
-     *                     format="binary"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="name",
-     *                     type="string"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="description",
-     *                     type="string"
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Add Category.")
-     * )
-     */
-
     function image_resize($width, $height, $path, $inputName)
     {
         list($w,$h)=getimagesize($_FILES[$inputName]['tmp_name']);
@@ -113,6 +82,36 @@ class CategoryController extends Controller
         imagedestroy($image);
         imagedestroy($tmp);
     }
+
+    /**
+     * @OA\Post(
+     *     tags={"Category"},
+     *     path="/api/category",
+     *   security={{ "bearerAuth": {} }},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"name"},
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     format="binary"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Add Category.")
+     * )
+     */
     public function store(Request $request)
     {
         //отримуємо дані із запиту(name, image, description)
@@ -134,16 +133,57 @@ class CategoryController extends Controller
         $filename = uniqid(). '.' .$request->file("image")->getClientOriginalExtension();
 
         $dir = $_SERVER['DOCUMENT_ROOT'];
-        $fileSave = $dir.'/uploads/'.$filename;
+        $fileSave = $dir.'/uploads/';
 
-        $this->image_resize(300,300,$fileSave, 'image');
-
-        //Storage::disk('local')->put("public/uploads/".$filename,file_get_contents($request->file("image")));
+        $sizes = [50, 150, 300, 600, 1200];
+        foreach ($sizes as $size) {
+            $this->image_resize($size,$size, $fileSave.$size.'_'.$filename, 'image');
+        }
         $input["image"] = $filename;
-        //$file = $request->file('image');
-        //$path = Storage::disk('public')->putFile('uploads', $file);
-
         $category = Category::create($input);
         return response()->json($category);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/category/{id}",
+     *     tags={"Category"},
+     *    security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Ідентифікатор категорії",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="number",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Успішне видалення категорії"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Категорії не знайдено"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Не авторизований"
+     *     )
+     * )
+     */
+    public function delete($id)
+    {
+        $file =  Category::findOrFail($id);
+        $sizes = [50, 150, 300, 600, 1200];
+        foreach ($sizes as $size) {
+            $fileName = $_SERVER['DOCUMENT_ROOT'].'/uploads/'.$size.'_'.$file["image"];
+            if (is_file($fileName)) {
+                unlink($fileName);
+            }
+        }
+        $file->delete();
+        return response()->json(['message' => 'категорію видалено']);
     }
 }
