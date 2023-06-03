@@ -43,11 +43,14 @@ const HomePage = () => {
   }
 
   const pagination = buttons.map((page) => (
-    <li key={page} className={classNames("page-item", {"active": page===current_page})}>
+    <li
+      key={page}
+      className={classNames("page-item", { active: page === current_page })}
+    >
       <Link
         className="page-link"
         to={"?page=" + page}
-        onClick={() => setSearch({...search, page })}
+        onClick={() => setSearch({ ...search, page })}
       >
         {page}
       </Link>
@@ -57,7 +60,11 @@ const HomePage = () => {
   const dataView = data.map((category) => (
     <tr key={category.id}>
       <th>
-        <img src={`${APP_ENV.BASE_URL}storage/uploads/${category.image}`} alt="Фотка" width={50} />
+        <img
+          src={`${APP_ENV.BASE_URL}uploads/50_${category.image}`}
+          alt="Фотка"
+          width={50}
+        />
       </th>
       <td>{category.name}</td>
       <td>{category.description}</td>
@@ -67,19 +74,23 @@ const HomePage = () => {
 
   const loginUser = () => {
     console.log("Вхід у систему");
-    dispatch({type: AuthUserActionType.LOGIN_USER});
-  }
+    dispatch({ type: AuthUserActionType.LOGIN_USER });
+  };
 
   const logoutUser = () => {
     console.log("Вийти із системи");
-    dispatch({type: AuthUserActionType.LOGOUT_USER});
-  }
+    dispatch({ type: AuthUserActionType.LOGOUT_USER });
+  };
 
   return (
     <>
       <h1 className="text-center">Список категорій</h1>
-      <button className="btn btn-primary" onClick={loginUser}>Вхід</button>
-      <button className="btn btn-danger" onClick={logoutUser}>Вихід</button>
+      <button className="btn btn-primary" onClick={loginUser}>
+        Вхід
+      </button>
+      <button className="btn btn-danger" onClick={logoutUser}>
+        Вихід
+      </button>
       <Link className="btn btn-success" to="/categories/create">
         Додати
       </Link>
@@ -98,7 +109,7 @@ const HomePage = () => {
             </thead>
             <tbody>{dataView}</tbody>
           </table>
-            <ul className="pagination justify-content-center">{pagination}</ul>
+          <ul className="pagination justify-content-center">{pagination}</ul>
         </>
       )}
     </>
