@@ -70,27 +70,10 @@ const HomePage = () => {
       <td>{category.description}</td>
     </tr>
   ));
-  const dispatch = useDispatch();
-
-  const loginUser = () => {
-    console.log("Вхід у систему");
-    dispatch({ type: AuthUserActionType.LOGIN_USER });
-  };
-
-  const logoutUser = () => {
-    console.log("Вийти із системи");
-    dispatch({ type: AuthUserActionType.LOGOUT_USER });
-  };
 
   return (
     <>
       <h1 className="text-center">Список категорій</h1>
-      <button className="btn btn-primary" onClick={loginUser}>
-        Вхід
-      </button>
-      <button className="btn btn-danger" onClick={logoutUser}>
-        Вихід
-      </button>
       <Link className="btn btn-success" to="/categories/create">
         Додати
       </Link>
