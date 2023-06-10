@@ -34,8 +34,21 @@ class CategoryController extends Controller
      */
     public function index()
     {
-
         $list = Category::paginate(2);
+        return response()->json($list,200);
+    }
+
+    /**
+     * @OA\Get(
+     *     tags={"Category"},
+     *     path="/api/category/select",
+     *   security={{ "bearerAuth": {} }},
+     *     @OA\Response(response="200", description="List Categories.")
+     * )
+     */
+    public function select()
+    {
+        $list = Category::all();
         return response()->json($list,200);
     }
 

@@ -6,15 +6,14 @@ import { AuthUserActionType, IAuthUser } from "../../auth/types";
 import "./DefaultHeader.css";
 
 const DefaultHeader = () => {
-  
   const dispatch = useDispatch();
   const { isAuth, user } = useSelector((store: any) => store.auth as IAuthUser);
 
   const logout = () => {
     delete http.defaults.headers.common["Authorization"];
     localStorage.removeItem("token");
-    dispatch({type: AuthUserActionType.LOGOUT_USER});
-  }
+    dispatch({ type: AuthUserActionType.LOGOUT_USER });
+  };
 
   console.log("is Auth", isAuth);
 
@@ -49,12 +48,9 @@ const DefaultHeader = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Link
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link disabled">Disabled</a>
+                  <Link className="nav-link" to="/products/create">
+                    Додати товар
+                  </Link>
                 </li>
               </ul>
               <ul className="navbar-nav">

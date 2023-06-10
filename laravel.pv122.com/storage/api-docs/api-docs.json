@@ -82,6 +82,24 @@
                 ]
             }
         },
+        "/api/category/select": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "operationId": "0b70904deeb472ca6a58642792785d6b",
+                "responses": {
+                    "200": {
+                        "description": "List Categories."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/category/{id}": {
             "delete": {
                 "tags": [

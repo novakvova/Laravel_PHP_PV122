@@ -32,6 +32,7 @@ Route::group([
 
 //отримання списку категорій
 Route::get("/category", [CategoryController::class, 'index']);
+Route::get("/category/select", [CategoryController::class, 'select']);
 
 //додавання нової категорії
 Route::post("/category", [CategoryController::class, 'store']);
