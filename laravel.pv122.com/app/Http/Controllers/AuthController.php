@@ -199,5 +199,4 @@ class AuthController extends Controller
             //'user' => auth()->user()
         ], Response::HTTP_OK);
     }
-
 }

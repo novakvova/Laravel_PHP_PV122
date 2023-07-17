@@ -9,11 +9,6 @@ import { ICategoryResponse, ICategorySearch } from "./types";
 
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log("page = ", searchParams.get("page"));
-
-  const [search, setSearch] = useState<ICategorySearch>({
-    page: searchParams.get("page") || 1,
-  });
 
   const [category, setCategory] = useState<ICategoryResponse>({
     data: [],
@@ -22,10 +17,19 @@ const HomePage = () => {
     last_page: 0,
   });
 
+  console.log("---info url---", window.location);
   useEffect(() => {
+    // read the params on component load and when any changes occur
+    const currentParams = Object.fromEntries([...searchParams as any]);
+    // get new values on change
+    console.log('-------useEffect:', currentParams);
+    var find: ICategorySearch = {
+      page: currentParams.page || 1,
+    };
+
     http
       .get<ICategoryResponse>(`api/category`, {
-        params: search,
+        params: find,
       })
       .then((resp) => {
         //setList(resp.data.data);
@@ -34,7 +38,7 @@ const HomePage = () => {
       .catch((bad) => {
         console.log("Bad request", bad);
       });
-  }, [search]);
+  }, [searchParams]);
 
   const { data, last_page, current_page, total } = category;
   const buttons = [];
@@ -50,7 +54,6 @@ const HomePage = () => {
       <Link
         className="page-link"
         to={"?page=" + page}
-        onClick={() => setSearch({ ...search, page })}
       >
         {page}
       </Link>
