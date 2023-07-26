@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+
 class ImageWorker
 {
     public static function image_resize($width, $height, $path, $inputName)
@@ -47,4 +48,16 @@ class ImageWorker
         imagedestroy($image);
         imagedestroy($tmp);
     }
+
+    public function girl() {
+        $salo = $this->pomada();
+        return $salo;
+    }
+    public function pomada() {
+        return "Hello";
+    }
+}
+
+function pomada() {
+
 }
