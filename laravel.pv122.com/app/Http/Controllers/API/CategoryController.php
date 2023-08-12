@@ -75,7 +75,11 @@ class CategoryController extends Controller
      *                     type="string"
      *                 ),
      *                 @OA\Property(
-     *                     property="description",
+     *                     property="short_text",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="text",
      *                     type="string"
      *                 )
      *             )
@@ -90,12 +94,14 @@ class CategoryController extends Controller
         $input = $request->all();
         $messages = array(
             'name.required' => 'Вкажіть назву категорії!',
-            'description.required' => 'Вкажіть опис категорії!',
+            'short_text.required' => 'Вкажіть короткий опис категорії!',
+            'text.required' => 'Вкажіть опис категорії!',
             'image.required' => 'Оберіть фото категорії!'
         );
         $validator = Validator::make($input, [
             'name' => 'required',
-            'description' => 'required',
+            'short_text' => 'required',
+            'text' => 'required',
             'image' => 'required',
         ], $messages);
         if($validator->fails()){
@@ -190,7 +196,11 @@ class CategoryController extends Controller
      *                     type="string"
      *                 ),
      *                 @OA\Property(
-     *                     property="description",
+     *                     property="short_text",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="text",
      *                     type="string"
      *                 )
      *             )
@@ -207,12 +217,13 @@ class CategoryController extends Controller
 
         $messages = array(
             'name.required' => 'Вкажіть назву категорії!',
-            'description.required' => 'Вкажіть опис категорії!'
+            'short_text.required' => 'Вкажіть опис категорії!',
+            'text.required' => 'Вкажіть опис категорії!'
         );
         $validator = Validator::make($input, [
             'name' => 'required',
-            'description' => 'required'
-
+            'short_text' => 'required',
+            'text' => 'required'
         ], $messages);
 
         if ($validator->fails()) {
@@ -230,7 +241,8 @@ class CategoryController extends Controller
         }
         $file->image=$newFileName;
         $file->name = $input['name'];
-        $file->description = $input['description'];
+        $file->short_text = $input['short_text'];
+        $file->text = $input['text'];
         $file->save();
 
         return response()->json($file);

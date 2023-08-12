@@ -1,6 +1,7 @@
 export interface ICategoryCreate {
     name: string,
     image: File|null,
-    description: string
+    short_text: string,
+    text: string
 }
 

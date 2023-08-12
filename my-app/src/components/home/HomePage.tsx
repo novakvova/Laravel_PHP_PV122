@@ -70,7 +70,8 @@ const HomePage = () => {
         />
       </th>
       <td>{category.name}</td>
-      <td>{category.description}</td>
+      <td>{category.short_text}</td>
+      <td>{category.text}</td>
     </tr>
   ));
 
@@ -90,7 +91,8 @@ const HomePage = () => {
               <tr>
                 <th scope="col">Фото</th>
                 <th scope="col">Назва</th>
-                <th scope="col">Опис</th>
+                <th scope="col">Короткий опис</th>
+                <th scope="col">Повний опис</th>
               </tr>
             </thead>
             <tbody>{dataView}</tbody>

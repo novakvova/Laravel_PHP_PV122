@@ -2,7 +2,8 @@ export interface ICategoryItem {
     id: number,
     name: string,
     image: string,
-    description: string
+    short_text: string,
+    text: string
 }
 
 export interface ICategoryResponse {

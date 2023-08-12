@@ -13,12 +13,14 @@ const CategoryCreatePage = () => {
   const initValues: ICategoryCreate = {
     name: "",
     image: null,
-    description: "",
+    text: "",
+    short_text: ""
   };
 
   const createSchema = yup.object({
     name: yup.string().required("Вкажіть назву"),
-    description: yup.string().required("Вкажіть опис"),
+    text: yup.string().required("Вкажіть опис"),
+    short_text: yup.string().required("Вкажіть опис"),
   });
 
   const onSubmitFormikData = (values: ICategoryCreate) => {
@@ -103,19 +105,37 @@ const CategoryCreatePage = () => {
         <div className="form-floating mb-3">
           <textarea
             className={classNames("form-control", {
-              "is-invalid": errors.description && touched.description,
+              "is-invalid": errors.short_text && touched.short_text,
             })}
-            placeholder="Вкажіть опис"
-            id="description"
-            name="description"
-            style={{ height: "100px" }}
-            value={values.description}
+            placeholder="Вкажіть короткий опис"
+            id="short_text"
+            name="short_text"
+            style={{ height: "75x" }}
+            value={values.short_text}
             onChange={handleChange}
           ></textarea>
-          {errors.description && touched.description && (
-            <div className="invalid-feedback">{errors.description}</div>
+          {errors.short_text && touched.short_text && (
+            <div className="invalid-feedback">{errors.short_text}</div>
           )}
-          <label htmlFor="description">Опис</label>
+          <label htmlFor="short_text">Короткий опис</label>
+        </div>
+
+        <div className="form-floating mb-3">
+          <textarea
+              className={classNames("form-control", {
+                "is-invalid": errors.text && touched.text,
+              })}
+              placeholder="Вкажіть опис"
+              id="text"
+              name="text"
+              style={{ height: "150px" }}
+              value={values.text}
+              onChange={handleChange}
+          ></textarea>
+          {errors.text && touched.text && (
+              <div className="invalid-feedback">{errors.text}</div>
+          )}
+          <label htmlFor="text">Повний опис</label>
         </div>
 
         <button type="submit" className="btn btn-primary">
